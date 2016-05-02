@@ -1,0 +1,32 @@
+{
+	project: 
+	{
+		name: "Test project",
+		mod:
+		{
+			id: "modid",
+			name: "Mod IDE",
+			version: "0.0.1",
+			group: "com.leviathanstudio",
+			url: "lien url",
+			updateUrl: "lien url",
+			authorList: ["author1", "author2"],
+			credits: "credits",
+			logoFile: "path",
+			screenshots: ["im1", "im2"]
+		}
+		ide:
+		{
+			version: "0.0.0"
+		}
+	},
+	forge:
+	{
+		version: "11.14.4.1577",
+		mapping: "snapshot_20160429"
+	},
+	minecraft:
+	{
+		version:"1.8"
+	}
+}
