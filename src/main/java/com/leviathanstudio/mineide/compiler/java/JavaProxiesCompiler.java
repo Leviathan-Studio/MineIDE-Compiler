@@ -13,86 +13,86 @@ import com.squareup.javapoet.TypeSpec;
 
 public class JavaProxiesCompiler
 {
-    private static String proxiesPackage;
+    private String proxiesPackage;
     
-    public static String getProxiesPackage()
+    public String getProxiesPackage()
     {
-        return proxiesPackage;
+        return this.proxiesPackage;
     }
     
-    public static void setProxiesPackage(String proxiesPackage)
+    public void setProxiesPackage(String packageName)
     {
-        JavaProxiesCompiler.proxiesPackage = proxiesPackage;
+        this.proxiesPackage = packageName;
     }
     
-    private static JavaFile clientProxyJavaFile, commonProxyJavaFile, serverProxyJavaFile;
-    private static ClassName clientProxyClass, commonProxyClass, serverProxyClass;
-    private static Builder initMethod, preInitMethod;
+    private JavaFile clientProxyJavaFile, commonProxyJavaFile, serverProxyJavaFile;
+    private ClassName clientProxyClass, commonProxyClass, serverProxyClass;
+    private Builder initMethod, preInitMethod;
     
-    public static void generateProxiesClasses() throws IOException
+    public void compile() throws IOException
     {
-        clientProxyClass = ClassName.get(getProxiesPackage(), "ClientProxy");
-        commonProxyClass = ClassName.get(getProxiesPackage(), "CommonProxy");
-        serverProxyClass = ClassName.get(getProxiesPackage(), "ServerProxy");
+        this.clientProxyClass = ClassName.get(getProxiesPackage(), "ClientProxy");
+        this.commonProxyClass = ClassName.get(getProxiesPackage(), "CommonProxy");
+        this.serverProxyClass = ClassName.get(getProxiesPackage(), "ServerProxy");
         
-        preInitMethod = MethodSpec.methodBuilder("preInit").addModifiers(Modifier.PUBLIC).addParameter(File.class, "configFile");
-        initMethod = MethodSpec.methodBuilder("init").addModifiers(Modifier.PUBLIC);
+        this.preInitMethod = MethodSpec.methodBuilder("preInit").addModifiers(Modifier.PUBLIC).addParameter(File.class, "configFile");
+        this.initMethod = MethodSpec.methodBuilder("init").addModifiers(Modifier.PUBLIC);
         
-        initCommonProxy();
-        initClientProxy();
-        initServerProxy();
+        this.initCommonProxy();
+        this.initClientProxy();
+        this.initServerProxy();
     }
     
-    private static void initClientProxy() throws IOException
+    private void initClientProxy() throws IOException
     {
         TypeSpec clientProxyBuilder = TypeSpec.classBuilder(clientProxyClass).superclass(commonProxyClass).addModifiers(Modifier.PUBLIC).addMethod(preInitMethod.addAnnotation(Override.class).addStatement("super.preInit(configFile)").build()).addMethod(initMethod.addAnnotation(Override.class).addStatement("super.init()").build()).build();
         
-        setClientProxyJavaFile(JavaFile.builder(clientProxyClass.packageName(), clientProxyBuilder).build());
+        this.setClientProxyJavaFile(JavaFile.builder(clientProxyClass.packageName(), clientProxyBuilder).build());
     }
     
-    private static void initCommonProxy() throws IOException
+    private void initCommonProxy() throws IOException
     {
         
         TypeSpec commonProxyBuilder = TypeSpec.classBuilder(commonProxyClass).addModifiers(Modifier.PUBLIC).addMethod(preInitMethod.build()).addMethod(initMethod.build()).build();
         
-        setCommonProxyJavaFile(JavaFile.builder(commonProxyClass.packageName(), commonProxyBuilder).build());
+        this.setCommonProxyJavaFile(JavaFile.builder(commonProxyClass.packageName(), commonProxyBuilder).build());
     }
     
-    private static void initServerProxy() throws IOException
+    private void initServerProxy() throws IOException
     {
         TypeSpec serverProxyBuilder = TypeSpec.classBuilder(serverProxyClass).superclass(commonProxyClass).addModifiers(Modifier.PUBLIC).addMethod(preInitMethod.build()).addMethod(initMethod.build()).build();
         
-        setServerProxyJavaFile(JavaFile.builder(serverProxyClass.packageName(), serverProxyBuilder).build());
+        this.setServerProxyJavaFile(JavaFile.builder(serverProxyClass.packageName(), serverProxyBuilder).build());
     }
     
-    public static JavaFile getClientProxyJavaFile()
+    public JavaFile getClientProxyJavaFile()
     {
-        return clientProxyJavaFile;
+        return this.clientProxyJavaFile;
     }
     
-    public static void setClientProxyJavaFile(JavaFile clientProxyJavaFile)
+    public void setClientProxyJavaFile(JavaFile javaFile)
     {
-        JavaProxiesCompiler.clientProxyJavaFile = clientProxyJavaFile;
+        this.clientProxyJavaFile = javaFile;
     }
     
-    public static JavaFile getCommonProxyJavaFile()
+    public JavaFile getCommonProxyJavaFile()
     {
-        return commonProxyJavaFile;
+        return this.commonProxyJavaFile;
     }
     
-    public static void setCommonProxyJavaFile(JavaFile commonProxyJavaFile)
+    public void setCommonProxyJavaFile(JavaFile javaFile)
     {
-        JavaProxiesCompiler.commonProxyJavaFile = commonProxyJavaFile;
+        this.commonProxyJavaFile = javaFile;
     }
     
-    public static JavaFile getServerProxyJavaFile()
+    public JavaFile getServerProxyJavaFile()
     {
-        return serverProxyJavaFile;
+        return this.serverProxyJavaFile;
     }
     
-    public static void setServerProxyJavaFile(JavaFile serverProxyJavaFile)
+    public void setServerProxyJavaFile(JavaFile javaFile)
     {
-        JavaProxiesCompiler.serverProxyJavaFile = serverProxyJavaFile;
+        this.serverProxyJavaFile = javaFile;
     }
     
 }

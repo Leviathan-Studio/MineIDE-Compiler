@@ -13,10 +13,10 @@ import com.squareup.javapoet.TypeSpec;
 
 public class JavaMainClassCompiler
 {
-    private static String mainClassPackage, mainClassName;
-    private static JavaFile javaFile;
+    private String mainClassPackage, mainClassName;
+    private JavaFile mainClassJavaFile;
     
-    public static void generateMainClass() throws IOException
+    public void compile() throws IOException
     {
         String commonPackageForge = "net.minecraftforge.fml.common";
         ClassName classMain = ClassName.get(getMainClassPackage(), getMainClassName());
@@ -53,36 +53,36 @@ public class JavaMainClassCompiler
         
         TypeSpec mainClass = TypeSpec.classBuilder(classMain).addAnnotation(modAnnotation).addModifiers(Modifier.PUBLIC).addField(instanceField).addField(proxyField).addField(loggerField).addMethod(preInitMethod).addMethod(initMethod).addMethod(postInitMethod).build();
         
-        setJavaFile(JavaFile.builder(classMain.packageName(), mainClass).build());
+        this.setMainClassJavaFile(JavaFile.builder(classMain.packageName(), mainClass).build());
     }
     
-    public static JavaFile getJavaFile()
+    public JavaFile getMainClassJavaFile()
     {
-        return javaFile;
+        return this.mainClassJavaFile;
     }
     
-    public static void setJavaFile(JavaFile javaFile)
+    public void setMainClassJavaFile(JavaFile javaFile)
     {
-        JavaMainClassCompiler.javaFile = javaFile;
+        this.mainClassJavaFile = javaFile;
     }
     
-    public static String getMainClassPackage()
+    public String getMainClassPackage()
     {
-        return mainClassPackage;
+        return this.mainClassPackage;
     }
     
-    public static void setMainClassPackage(String mainClassPackage)
+    public void setMainClassPackage(String packageName)
     {
-        JavaMainClassCompiler.mainClassPackage = mainClassPackage;
+        this.mainClassPackage = packageName;
     }
     
-    public static String getMainClassName()
+    public String getMainClassName()
     {
-        return mainClassName;
+        return this.mainClassName;
     }
     
-    public static void setMainClassName(String mainClassName)
+    public void setMainClassName(String className)
     {
-        JavaMainClassCompiler.mainClassName = mainClassName;
+        this.mainClassName = className;
     }
 }
