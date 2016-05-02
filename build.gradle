@@ -33,7 +33,7 @@ sourceSets {
             srcDirs 'src/main/java'
         }
         resources {
-            srcDirs 'src/main//resources'
+            srcDirs 'src/main/resources'
         }
     }
 }
@@ -41,7 +41,7 @@ sourceSets {
 dependencies {
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.5'
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.5'
-    compile 'com.google.code.gson:gson:2.7-SNAPSHOT'
+    compile 'com.squareup.moshi:moshi:1.1.0'
 	compile 'com.squareup:javapoet:1.7.0'
 }
 
