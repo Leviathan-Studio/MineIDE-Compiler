@@ -2,8 +2,6 @@ package com.leviathanstudio.mineide.utils;
 
 import java.io.File;
 
-import com.leviathanstudio.mineide.ui.Gui;
-
 public class OSHelper
 {
     public static enum OS
@@ -32,7 +30,7 @@ public class OSHelper
     public static File getWorkingDirectory()
     {
         final String userHome = System.getProperty("user.home", ".");
-        String appName = Gui.mineIdeInfo.getAppName() != null ? Gui.mineIdeInfo.getAppName() : "MineIDE";
+        String appName = "MineIDE";
         File workingDirectory;
         switch(getPlatform())
         {

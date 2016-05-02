@@ -1,10 +1,8 @@
 package com.leviathanstudio.mineide.utils;
 
-import java.io.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.leviathanstudio.mineide.json.MineIDEConfig;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 
 public class Utils
 {
@@ -48,39 +46,6 @@ public class Utils
         if(!file.exists())
         {
             file.mkdirs();
-        }
-    }
-    
-    public static void replaceMappingSelected()
-    {
-        try
-        {
-            File inputFile = new File(Utils.FORGE_DIR + "/build.gradle");
-            BufferedReader file = new BufferedReader(new FileReader(inputFile));
-            String line;
-            String input = "";
-            
-            while((line = file.readLine()) != null)
-                input += line + '\n';
-                
-            file.close();
-            
-            Pattern p = Pattern.compile("\\_(.*?)\\\"");
-            Matcher m = p.matcher(input);
-            while(m.find())
-            {
-                input = input.replace("mappings = \"snapshot_" + m.group(1) + "\"", "mappings = " + "\"" + MineIDEConfig.getMappingVersion() + "\"");
-            }
-            
-            FileWriter fileOut = new FileWriter(inputFile);
-            fileOut.write(input);
-            fileOut.close();
-            
-        }
-        catch(Exception e)
-        {
-            System.out.println("Problem reading file.");
-            e.printStackTrace();
         }
     }
 }

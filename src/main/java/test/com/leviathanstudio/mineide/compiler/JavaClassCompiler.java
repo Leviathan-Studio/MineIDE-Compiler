@@ -1,4 +1,4 @@
-package com.leviathanstudio.mineide.compiler;
+package test.com.leviathanstudio.mineide.compiler;
 
 import java.io.File;
 import java.io.FilenameFilter;

@@ -1,4 +1,4 @@
-package com.leviathanstudio.mineide.java.generator;
+package com.leviathanstudio.mineide.compiler;
 
 import java.io.IOException;
 
