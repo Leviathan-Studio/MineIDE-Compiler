@@ -1,10 +1,9 @@
-package com.leviathanstudio.mineide.compiler;
+package com.leviathanstudio.mineide.compiler.java;
 
 import java.io.IOException;
 
 import javax.lang.model.element.Modifier;
 
-import com.leviathanstudio.mineide.utils.Utils;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
@@ -12,9 +11,10 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
-public class MainClassGenerator
+public class JavaMainClassCompiler
 {
     private static String mainClassPackage, mainClassName;
+    private static JavaFile javaFile;
     
     public static void generateMainClass() throws IOException
     {
@@ -26,10 +26,11 @@ public class MainClassGenerator
         ClassName eventHandlerClass = ClassName.get(commonPackageForge + ".Mod", "EventHandler");
         ClassName preInitEventClass = ClassName.get(commonPackageForge + ".event", "FMLPreInitializationEvent");
         ClassName initEventClass = ClassName.get(commonPackageForge + ".event", "FMLInitializationEvent");
+        ClassName postInitEventClass = ClassName.get(commonPackageForge + ".event", "FMLPostInitializationEvent");
         
-        ClassName clientProxyClass = ClassName.get("com.example.mineide.proxy", "ClientProxy");
-        ClassName commonProxyClass = ClassName.get("com.example.mineide.proxy", "CommonProxy");
-        ClassName serverProxyClass = ClassName.get("com.example.mineide.proxy", "ServerProxy");
+        ClassName clientProxyClass = ClassName.get(getMainClassPackage() + ".proxy", "ClientProxy");
+        ClassName commonProxyClass = ClassName.get(getMainClassPackage() + ".proxy", "CommonProxy");
+        ClassName serverProxyClass = ClassName.get(getMainClassPackage() + ".proxy", "ServerProxy");
         
         ClassName instanceClass = ClassName.get(commonPackageForge + ".Mod", "Instance");
         AnnotationSpec instanceAnnotation = AnnotationSpec.builder(instanceClass).addMember("value", "$S", "MODID_TEST").build();
@@ -48,13 +49,21 @@ public class MainClassGenerator
         
         MethodSpec preInitMethod = MethodSpec.methodBuilder("preInit").addModifiers(Modifier.PUBLIC).addAnnotation(eventHandlerClass).addParameter(preInitEventClass, "event").addStatement("logger = event.getModLog()").addStatement("proxy.preInit(event.getSuggestedConfigurationFile())").build();
         MethodSpec initMethod = MethodSpec.methodBuilder("init").addModifiers(Modifier.PUBLIC).addAnnotation(eventHandlerClass).addParameter(initEventClass, "event").addStatement("proxy.init()").build();
+        MethodSpec postInitMethod = MethodSpec.methodBuilder("postInit").addModifiers(Modifier.PUBLIC).addAnnotation(eventHandlerClass).addParameter(postInitEventClass, "event").build();
         
-        TypeSpec mainClass = TypeSpec.classBuilder(classMain).addAnnotation(modAnnotation).addModifiers(Modifier.PUBLIC).addField(instanceField).addField(proxyField).addField(loggerField).addMethod(preInitMethod).addMethod(initMethod).build();
+        TypeSpec mainClass = TypeSpec.classBuilder(classMain).addAnnotation(modAnnotation).addModifiers(Modifier.PUBLIC).addField(instanceField).addField(proxyField).addField(loggerField).addMethod(preInitMethod).addMethod(initMethod).addMethod(postInitMethod).build();
         
-        JavaFile javaFile = JavaFile.builder(classMain.packageName(), mainClass).build();
-        
-        javaFile.writeTo(Utils.FORGE_SRC_JAVA_DIR);
-        javaFile.writeTo(System.out);
+        setJavaFile(JavaFile.builder(classMain.packageName(), mainClass).build());
+    }
+    
+    public static JavaFile getJavaFile()
+    {
+        return javaFile;
+    }
+    
+    public static void setJavaFile(JavaFile javaFile)
+    {
+        JavaMainClassCompiler.javaFile = javaFile;
     }
     
     public static String getMainClassPackage()
@@ -64,7 +73,7 @@ public class MainClassGenerator
     
     public static void setMainClassPackage(String mainClassPackage)
     {
-        MainClassGenerator.mainClassPackage = mainClassPackage;
+        JavaMainClassCompiler.mainClassPackage = mainClassPackage;
     }
     
     public static String getMainClassName()
@@ -74,6 +83,6 @@ public class MainClassGenerator
     
     public static void setMainClassName(String mainClassName)
     {
-        MainClassGenerator.mainClassName = mainClassName;
+        JavaMainClassCompiler.mainClassName = mainClassName;
     }
 }
