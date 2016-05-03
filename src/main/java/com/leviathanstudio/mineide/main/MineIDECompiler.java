@@ -2,6 +2,7 @@ package com.leviathanstudio.mineide.main;
 
 import com.leviathanstudio.mineide.compiler.java.JavaMainClassCompiler;
 import com.leviathanstudio.mineide.compiler.java.JavaProxiesCompiler;
+import com.leviathanstudio.mineide.compiler.java.block.JavaBlockCompiler;
 import com.leviathanstudio.mineide.compiler.json.JsonMCModInfoCompiler;
 import com.leviathanstudio.mineide.utils.Utils;
 
@@ -28,5 +29,17 @@ public class MineIDECompiler
         
         JsonMCModInfoCompiler mcModInfoCompiler = new JsonMCModInfoCompiler();
         mcModInfoCompiler.compile();
+        
+        JavaBlockCompiler blockCompiler = new JavaBlockCompiler();
+        
+        blockCompiler.setBlockPackage(mainClassCompiler.getMainClassPackage() + ".block");
+        blockCompiler.setBlockName("BlockTesting1");
+        blockCompiler.setUnlocalizedName("thisIsATest_block");
+        blockCompiler.setHardness(1.0F);
+        blockCompiler.setResistance(11.0F);
+        blockCompiler.setStepSound("StepSound.soundStone");
+        blockCompiler.addBasicBlock();
+        
+        blockCompiler.getBlockClassJavaFile().writeTo(System.out);
     }
 }
