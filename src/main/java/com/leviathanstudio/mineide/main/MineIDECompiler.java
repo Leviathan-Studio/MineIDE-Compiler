@@ -38,7 +38,7 @@ public class MineIDECompiler
         blockCompiler.setHardness(1.0F);
         blockCompiler.setResistance(11.0F);
         blockCompiler.setStepSound("StepSound.soundStone");
-        blockCompiler.addBasicBlock();
+        blockCompiler.initSimpleBlock();
         
         blockCompiler.getBlockClassJavaFile().writeTo(System.out);
     }

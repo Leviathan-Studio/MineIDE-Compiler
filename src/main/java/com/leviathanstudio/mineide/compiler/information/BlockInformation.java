@@ -2,7 +2,7 @@ package com.leviathanstudio.mineide.compiler.information;
 
 public class BlockInformation
 {
-    private String unlocalizedName, stepSound;
+    private String unlocalizedName, stepSound, creativeTab;
     private float hardness, resistance, lightLevel;
     private int lightOpacity, harvestLevel;
     private boolean unbreakable, tickRandom;
@@ -25,6 +25,16 @@ public class BlockInformation
     public void setStepSound(String stepSound)
     {
         this.stepSound = stepSound;
+    }
+    
+    public String getCreativeTab()
+    {
+        return creativeTab;
+    }
+    
+    public void setCreativeTab(String creativeTab)
+    {
+        this.creativeTab = creativeTab;
     }
     
     public float getHardness()
