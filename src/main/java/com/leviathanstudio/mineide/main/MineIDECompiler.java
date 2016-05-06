@@ -1,7 +1,5 @@
 package com.leviathanstudio.mineide.main;
 
-import javax.lang.model.element.Modifier;
-
 import com.leviathanstudio.mineide.compiler.java.JavaMainClassCompiler;
 import com.leviathanstudio.mineide.compiler.java.JavaProxiesCompiler;
 import com.leviathanstudio.mineide.compiler.java.block.JavaBlockCompiler;
@@ -9,9 +7,6 @@ import com.leviathanstudio.mineide.compiler.json.JsonMCModInfoCompiler;
 import com.leviathanstudio.mineide.utils.Utils;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeSpec;
 
 public class MineIDECompiler
 {
@@ -62,11 +57,6 @@ public class MineIDECompiler
                 
                 this.setBlockClass(ClassName.get(this.getBlockPackage(), this.getBlockName()));
                 this.setSuperClass(this.blockSuperclass);
-            }
-            
-            @Override
-            public void initCompiler()
-            {
                 
                 this.getConstructorSpecList().add(CodeBlock.builder().addStatement("super($L)", materialClass.simpleName().toLowerCase()).build());
                 this.getConstructorSpecList().add(this.getUnlocalizedNameStatement());
@@ -74,33 +64,6 @@ public class MineIDECompiler
                 this.getConstructorSpecList().add(this.getHardnessStatement());
                 this.getConstructorSpecList().add(this.getResistanceStatement());
                 this.getConstructorSpecList().add(this.getStepSoundStatement());
-                
-                for(int i = 0; i < this.getConstructorSpecList().size(); i++)
-                {
-                    this.constructorSpec.add(this.getConstructorSpecList().get(i));
-                }
-                
-                // TODO Exemple: If needed for constructor declaration
-                // ParameterSpec unlocalizedName = ParameterSpec.builder(String.class, "unlocalizedName").build();
-                //
-                // ParameterSpec material = ParameterSpec.builder(materialClass, "material").build();
-                // ParameterSpec hardness = ParameterSpec.builder(Float.class, "hardness").build();
-                // ParameterSpec resistance = ParameterSpec.builder(Float.class, "resistance").build();
-                //
-                // parametersList.add(unlocalizedName);
-                // parametersList.add(material);
-                // parametersList.add(hardness);
-                // parametersList.add(resistance);
-                //
-                // for(int i = 0; i < parametersList.size(); i++)
-                // {
-                // this.parameters.addParameter(parametersList.get(i).type, parametersList.get(i).name);
-                // }
-                
-                this.setBasicBlockConstructor(MethodSpec.constructorBuilder().addParameter(materialClass, "material").addModifiers(Modifier.PUBLIC).addCode(this.constructorSpec.build()).build());
-                
-                this.setBlockBuilder(TypeSpec.classBuilder(this.getBlockClass()).superclass(this.getSuperClass()).addModifiers(Modifier.PUBLIC).addMethod(this.getBasicBlockConstructor()).build());
-                this.setBlockClassJavaFile(JavaFile.builder(this.getBlockClass().packageName(), getBlockBuilder()).build());
             }
         };
         testBlock1Compiler.compile();
@@ -131,11 +94,6 @@ public class MineIDECompiler
                 
                 this.setBlockClass(ClassName.get(this.getBlockPackage(), this.getBlockName()));
                 this.setSuperClass(this.blockSuperclass);
-            }
-            
-            @Override
-            public void initCompiler()
-            {
                 
                 this.getConstructorSpecList().add(CodeBlock.builder().addStatement("super($L)", materialClass.simpleName().toLowerCase()).build());
                 this.getConstructorSpecList().add(this.getUnlocalizedNameStatement());
@@ -143,33 +101,6 @@ public class MineIDECompiler
                 this.getConstructorSpecList().add(this.getHardnessStatement());
                 this.getConstructorSpecList().add(this.getResistanceStatement());
                 this.getConstructorSpecList().add(this.getStepSoundStatement());
-                
-                for(int i = 0; i < this.getConstructorSpecList().size(); i++)
-                {
-                    this.constructorSpec.add(this.getConstructorSpecList().get(i));
-                }
-                
-                // TODO Exemple: If needed for constructor declaration
-                // ParameterSpec unlocalizedName = ParameterSpec.builder(String.class, "unlocalizedName").build();
-                //
-                // ParameterSpec material = ParameterSpec.builder(materialClass, "material").build();
-                // ParameterSpec hardness = ParameterSpec.builder(Float.class, "hardness").build();
-                // ParameterSpec resistance = ParameterSpec.builder(Float.class, "resistance").build();
-                //
-                // parametersList.add(unlocalizedName);
-                // parametersList.add(material);
-                // parametersList.add(hardness);
-                // parametersList.add(resistance);
-                //
-                // for(int i = 0; i < parametersList.size(); i++)
-                // {
-                // this.parameters.addParameter(parametersList.get(i).type, parametersList.get(i).name);
-                // }
-                
-                this.setBasicBlockConstructor(MethodSpec.constructorBuilder().addParameter(materialClass, "material").addModifiers(Modifier.PUBLIC).addCode(this.constructorSpec.build()).build());
-                
-                this.setBlockBuilder(TypeSpec.classBuilder(this.getBlockClass()).superclass(this.getSuperClass()).addModifiers(Modifier.PUBLIC).addMethod(this.getBasicBlockConstructor()).build());
-                this.setBlockClassJavaFile(JavaFile.builder(this.getBlockClass().packageName(), getBlockBuilder()).build());
             }
         };
         testBlock2Compiler.compile();

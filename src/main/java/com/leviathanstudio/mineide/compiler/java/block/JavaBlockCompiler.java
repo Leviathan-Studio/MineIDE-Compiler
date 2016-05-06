@@ -3,6 +3,8 @@ package com.leviathanstudio.mineide.compiler.java.block;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.lang.model.element.Modifier;
+
 import com.leviathanstudio.mineide.compiler.information.BlockInformation;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -35,13 +37,36 @@ public abstract class JavaBlockCompiler extends BlockInformation
     
     public abstract void initializeBlockClass();
     
-    public abstract void initCompiler();
-    
     public void compile()
     {
         this.setBlockInformation();
         this.initializeBlockClass();
-        this.initCompiler();
+        
+        // TODO Exemple: If needed for constructor declaration
+        // ParameterSpec unlocalizedName = ParameterSpec.builder(String.class, "unlocalizedName").build();
+        //
+        // ParameterSpec material = ParameterSpec.builder(materialClass, "material").build();
+        // ParameterSpec hardness = ParameterSpec.builder(Float.class, "hardness").build();
+        // ParameterSpec resistance = ParameterSpec.builder(Float.class, "resistance").build();
+        //
+        // parametersList.add(unlocalizedName);
+        // parametersList.add(material);
+        // parametersList.add(hardness);
+        // parametersList.add(resistance);
+        //
+        // for(int i = 0; i < parametersList.size(); i++)
+        // {
+        // this.parameters.addParameter(parametersList.get(i).type, parametersList.get(i).name);
+        // }
+        
+        for(int i = 0; i < this.getConstructorSpecList().size(); i++)
+        {
+            this.constructorSpec.add(this.getConstructorSpecList().get(i));
+        }
+        
+        this.setBasicBlockConstructor(MethodSpec.constructorBuilder().addParameter(materialClass, "material").addModifiers(Modifier.PUBLIC).addCode(this.constructorSpec.build()).build());
+        this.setBlockBuilder(TypeSpec.classBuilder(this.getBlockClass()).superclass(this.getSuperClass()).addModifiers(Modifier.PUBLIC).addMethod(this.getBasicBlockConstructor()).build());
+        this.setBlockClassJavaFile(JavaFile.builder(this.getBlockClass().packageName(), getBlockBuilder()).build());
     }
     
     public CodeBlock getUnlocalizedNameStatement()
