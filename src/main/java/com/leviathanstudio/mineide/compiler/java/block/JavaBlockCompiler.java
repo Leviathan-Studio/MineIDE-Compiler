@@ -14,24 +14,22 @@ import com.squareup.javapoet.TypeSpec;
 
 public abstract class JavaBlockCompiler extends BlockInformation
 {
-    private String blockPackage, blockName;
+    private String blockClassPackage, blockClassName;
     private JavaFile blockClassJavaFile;
-    
-    // private List<ParameterSpec> parametersList = new ArrayList<ParameterSpec>();
-    // private MethodSpec.Builder parameters = MethodSpec.constructorBuilder();
     
     private ClassName blockClass, superClass;
     
+    // private List<ParameterSpec> parametersList = new ArrayList<ParameterSpec>();
+    // private MethodSpec.Builder parameters = MethodSpec.constructorBuilder();
     private List<CodeBlock> constructorSpecList = new ArrayList<CodeBlock>();
-    public CodeBlock.Builder constructorSpec = CodeBlock.builder();
+    private CodeBlock.Builder constructorSpec = CodeBlock.builder();
     
     private MethodSpec blockConstructor;
     private TypeSpec blockBuilder;
     
-    private CodeBlock unlocalizedNameStatement, creativeTabStatement, hardnessStatement, resistanceStatement, stepSoundStatement;
+    private CodeBlock unlocalizedNameStatement, creativeTabStatement, hardnessStatement, resistanceStatement, stepSoundStatement, harvestLevelStatement, lightLevelStatement, lightOpacityStatement, unbreakableStatement, tickRandomlyStatement;
     
-    public ClassName blockSuperclass = ClassName.get("net.minecraft.block", "Block");
-    public ClassName materialClass = ClassName.get("net.minecraft.block", "Material");
+    public abstract void setConstructor();
     
     public abstract void setBlockInformation();
     
@@ -39,7 +37,11 @@ public abstract class JavaBlockCompiler extends BlockInformation
     
     public void compile()
     {
+        // First Phase
         this.setBlockInformation();
+        
+        // Second Phase
+        this.setBlockClass(ClassName.get(this.getBlockClassPackage(), this.getBlockClassName()));
         this.initializeBlockClass();
         
         // TODO Exemple: If needed for constructor declaration
@@ -59,12 +61,12 @@ public abstract class JavaBlockCompiler extends BlockInformation
         // this.parameters.addParameter(parametersList.get(i).type, parametersList.get(i).name);
         // }
         
+        // Third Phase
         for(int i = 0; i < this.getConstructorSpecList().size(); i++)
         {
             this.constructorSpec.add(this.getConstructorSpecList().get(i));
         }
-        
-        this.setBasicBlockConstructor(MethodSpec.constructorBuilder().addParameter(materialClass, "material").addModifiers(Modifier.PUBLIC).addCode(this.constructorSpec.build()).build());
+        this.setConstructor();
         this.setBlockBuilder(TypeSpec.classBuilder(this.getBlockClass()).superclass(this.getSuperClass()).addModifiers(Modifier.PUBLIC).addMethod(this.getBasicBlockConstructor()).build());
         this.setBlockClassJavaFile(JavaFile.builder(this.getBlockClass().packageName(), getBlockBuilder()).build());
     }
@@ -119,24 +121,74 @@ public abstract class JavaBlockCompiler extends BlockInformation
         this.stepSoundStatement = stepSoundStatement;
     }
     
-    public String getBlockPackage()
+    public CodeBlock getHarvestLevelStatement()
     {
-        return blockPackage;
+        return harvestLevelStatement;
     }
     
-    public void setBlockPackage(String blockPackage)
+    public void setHarvestLevelStatement(CodeBlock harvestLevelStatement)
     {
-        this.blockPackage = blockPackage;
+        this.harvestLevelStatement = harvestLevelStatement;
     }
     
-    public String getBlockName()
+    public CodeBlock getLightLevelStatement()
     {
-        return blockName;
+        return lightLevelStatement;
     }
     
-    public void setBlockName(String blockName)
+    public void setLightLevelStatement(CodeBlock lightLevelStatement)
     {
-        this.blockName = blockName;
+        this.lightLevelStatement = lightLevelStatement;
+    }
+    
+    public CodeBlock getLightOpacityStatement()
+    {
+        return lightOpacityStatement;
+    }
+    
+    public void setLightOpacityStatement(CodeBlock lightOpacityStatement)
+    {
+        this.lightOpacityStatement = lightOpacityStatement;
+    }
+    
+    public CodeBlock getUnbreakableStatement()
+    {
+        return unbreakableStatement;
+    }
+    
+    public void setUnbreakableStatement(CodeBlock unbreakableStatement)
+    {
+        this.unbreakableStatement = unbreakableStatement;
+    }
+    
+    public CodeBlock getTickRandomlyStatement()
+    {
+        return tickRandomlyStatement;
+    }
+    
+    public void setTickRandomlyStatement(CodeBlock tickRandomlyStatement)
+    {
+        this.tickRandomlyStatement = tickRandomlyStatement;
+    }
+    
+    public String getBlockClassPackage()
+    {
+        return blockClassPackage;
+    }
+    
+    public void setBlockClassPackage(String blockPackage)
+    {
+        this.blockClassPackage = blockPackage;
+    }
+    
+    public String getBlockClassName()
+    {
+        return blockClassName;
+    }
+    
+    public void setBlockClassName(String blockName)
+    {
+        this.blockClassName = blockName;
     }
     
     public JavaFile getBlockClassJavaFile()
@@ -144,7 +196,7 @@ public abstract class JavaBlockCompiler extends BlockInformation
         return blockClassJavaFile;
     }
     
-    public void setBlockClassJavaFile(JavaFile blockClassJavaFile)
+    protected void setBlockClassJavaFile(JavaFile blockClassJavaFile)
     {
         this.blockClassJavaFile = blockClassJavaFile;
     }
@@ -169,12 +221,12 @@ public abstract class JavaBlockCompiler extends BlockInformation
         this.blockBuilder = blockBuilder;
     }
     
-    public ClassName getBlockClass()
+    protected ClassName getBlockClass()
     {
         return blockClass;
     }
     
-    public void setBlockClass(ClassName blockClass)
+    protected void setBlockClass(ClassName blockClass)
     {
         this.blockClass = blockClass;
     }
@@ -187,6 +239,16 @@ public abstract class JavaBlockCompiler extends BlockInformation
     public void setSuperClass(ClassName superClass)
     {
         this.superClass = superClass;
+    }
+    
+    public CodeBlock.Builder getConstructorSpec()
+    {
+        return constructorSpec;
+    }
+    
+    public void setConstructorSpec(CodeBlock.Builder constructorSpec)
+    {
+        this.constructorSpec = constructorSpec;
     }
     
     public List<CodeBlock> getConstructorSpecList()

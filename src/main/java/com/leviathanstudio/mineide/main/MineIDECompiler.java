@@ -1,5 +1,7 @@
 package com.leviathanstudio.mineide.main;
 
+import javax.lang.model.element.Modifier;
+
 import com.leviathanstudio.mineide.compiler.java.JavaMainClassCompiler;
 import com.leviathanstudio.mineide.compiler.java.JavaProxiesCompiler;
 import com.leviathanstudio.mineide.compiler.java.block.JavaBlockCompiler;
@@ -7,6 +9,7 @@ import com.leviathanstudio.mineide.compiler.json.JsonMCModInfoCompiler;
 import com.leviathanstudio.mineide.utils.Utils;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
+import com.squareup.javapoet.MethodSpec;
 
 public class MineIDECompiler
 {
@@ -32,13 +35,22 @@ public class MineIDECompiler
         JsonMCModInfoCompiler mcModInfoCompiler = new JsonMCModInfoCompiler();
         mcModInfoCompiler.compile();
         
+        ClassName blockSuperclass = ClassName.get("net.minecraft.block", "Block");
+        ClassName materialClass = ClassName.get("net.minecraft.block", "Material");
+        
         JavaBlockCompiler testBlock1Compiler = new JavaBlockCompiler()
         {
             @Override
+            public void setConstructor()
+            {
+                this.setBasicBlockConstructor(MethodSpec.constructorBuilder().addParameter(materialClass, "material").addModifiers(Modifier.PUBLIC).addCode(this.getConstructorSpec().build()).build());
+            }
+            
+            @Override
             public void setBlockInformation()
             {
-                this.setBlockPackage(mainClassCompiler.getMainClassPackage() + ".block");
-                this.setBlockName("BlockTesting1");
+                this.setBlockClassPackage(mainClassCompiler.getMainClassPackage() + ".block");
+                this.setBlockClassName("BlockTesting1");
                 this.setUnlocalizedName("thisIsATest_block");
                 this.setCreativeTab("CreativeTab.tabBlock");
                 this.setHardness(1.0F);
@@ -55,8 +67,7 @@ public class MineIDECompiler
                 this.setResistanceStatement(CodeBlock.builder().addStatement("this.$N($LF)", "setResistance", this.getResistance()).build());
                 this.setStepSoundStatement(CodeBlock.builder().addStatement("this.$N($L)", "setStepSound", this.getStepSound()).build());
                 
-                this.setBlockClass(ClassName.get(this.getBlockPackage(), this.getBlockName()));
-                this.setSuperClass(this.blockSuperclass);
+                this.setSuperClass(blockSuperclass);
                 
                 this.getConstructorSpecList().add(CodeBlock.builder().addStatement("super($L)", materialClass.simpleName().toLowerCase()).build());
                 this.getConstructorSpecList().add(this.getUnlocalizedNameStatement());
@@ -72,15 +83,20 @@ public class MineIDECompiler
         JavaBlockCompiler testBlock2Compiler = new JavaBlockCompiler()
         {
             @Override
+            public void setConstructor()
+            {
+                this.setBasicBlockConstructor(MethodSpec.constructorBuilder().addParameter(materialClass, "material").addModifiers(Modifier.PUBLIC).addCode(this.getConstructorSpec().build()).build());
+            }
+            
+            @Override
             public void setBlockInformation()
             {
-                this.setBlockPackage(mainClassCompiler.getMainClassPackage() + ".block");
-                this.setBlockName("BlockTesting2");
+                this.setBlockClassPackage(mainClassCompiler.getMainClassPackage() + ".block");
+                this.setBlockClassName("BlockTesting2");
+                
                 this.setUnlocalizedName("thisIsATest_block_number_two");
                 this.setCreativeTab("CreativeTab.tabMisc");
-                this.setHardness(1.0F);
-                this.setResistance(11.0F);
-                this.setStepSound("StepSound.soundWood");
+                this.setLightLevel(1.0F);
             }
             
             @Override
@@ -88,19 +104,13 @@ public class MineIDECompiler
             {
                 this.setUnlocalizedNameStatement(CodeBlock.builder().addStatement("this.$N(\"$L\")", "setUnlocalizedName", this.getUnlocalizedName()).build());
                 this.setCreativeTabStatement(CodeBlock.builder().addStatement("this.$N($L)", "setCreativeTab", this.getCreativeTab()).build());
-                this.setHardnessStatement(CodeBlock.builder().addStatement("this.$N($LF)", "setHardness", this.getHardness()).build());
-                this.setResistanceStatement(CodeBlock.builder().addStatement("this.$N($LF)", "setResistance", this.getResistance()).build());
-                this.setStepSoundStatement(CodeBlock.builder().addStatement("this.$N($L)", "setStepSound", this.getStepSound()).build());
-                
-                this.setBlockClass(ClassName.get(this.getBlockPackage(), this.getBlockName()));
-                this.setSuperClass(this.blockSuperclass);
+                this.setLightLevelStatement(CodeBlock.builder().addStatement("this.$N($LF)", "setLightLevel", this.getLightLevel()).build());
+                this.setSuperClass(blockSuperclass);
                 
                 this.getConstructorSpecList().add(CodeBlock.builder().addStatement("super($L)", materialClass.simpleName().toLowerCase()).build());
                 this.getConstructorSpecList().add(this.getUnlocalizedNameStatement());
                 this.getConstructorSpecList().add(this.getCreativeTabStatement());
-                this.getConstructorSpecList().add(this.getHardnessStatement());
-                this.getConstructorSpecList().add(this.getResistanceStatement());
-                this.getConstructorSpecList().add(this.getStepSoundStatement());
+                this.getConstructorSpecList().add(this.getLightLevelStatement());
             }
         };
         testBlock2Compiler.compile();
