@@ -18,6 +18,7 @@ public class JsonMCModInfoCompiler
     public void compile() throws IOException
     {
         JsonWriter writer = new JsonWriter(new FileWriter(Utils.FORGE_SRC_RESOURCE_DIR + "/mcmod.info"));
+        
         writer.setIndent("  ");
         
         writer.beginArray().beginObject();

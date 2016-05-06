@@ -5,6 +5,7 @@ import javax.lang.model.element.Modifier;
 import com.leviathanstudio.mineide.compiler.java.JavaMainClassCompiler;
 import com.leviathanstudio.mineide.compiler.java.JavaProxiesCompiler;
 import com.leviathanstudio.mineide.compiler.java.block.JavaBlockCompiler;
+import com.leviathanstudio.mineide.compiler.java.registry.JavaGameRegistry;
 import com.leviathanstudio.mineide.compiler.json.JsonMCModInfoCompiler;
 import com.leviathanstudio.mineide.utils.Utils;
 import com.squareup.javapoet.ClassName;
@@ -77,8 +78,6 @@ public class MineIDECompiler
                 this.getConstructorSpecList().add(this.getStepSoundStatement());
             }
         };
-        testBlock1Compiler.compile();
-        testBlock1Compiler.getBlockClassJavaFile().writeTo(System.out);
         
         JavaBlockCompiler testBlock2Compiler = new JavaBlockCompiler()
         {
@@ -113,7 +112,17 @@ public class MineIDECompiler
                 this.getConstructorSpecList().add(this.getLightLevelStatement());
             }
         };
+        
+        JavaGameRegistry gameRegistry = new JavaGameRegistry();
+        
+        gameRegistry.setGameRegistry("Block", "testBlock");
+        System.out.println(gameRegistry.getGameRegistry());
+        gameRegistry.setGameRegistry("Item", "testItem");
+        System.out.println(gameRegistry.getGameRegistry());
+        
+        testBlock1Compiler.compile();
+        testBlock1Compiler.getBlockClassJavaFile().writeTo(Utils.FORGE_SRC_JAVA_DIR);
         testBlock2Compiler.compile();
-        testBlock2Compiler.getBlockClassJavaFile().writeTo(System.out);
+        testBlock2Compiler.getBlockClassJavaFile().writeTo(Utils.FORGE_SRC_JAVA_DIR);
     }
 }
