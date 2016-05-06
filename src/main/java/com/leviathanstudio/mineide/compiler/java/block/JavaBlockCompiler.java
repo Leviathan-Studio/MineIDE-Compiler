@@ -3,8 +3,6 @@ package com.leviathanstudio.mineide.compiler.java.block;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.lang.model.element.Modifier;
-
 import com.leviathanstudio.mineide.compiler.information.BlockInformation;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -12,7 +10,7 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
-public class JavaBlockCompiler extends BlockInformation
+public abstract class JavaBlockCompiler extends BlockInformation
 {
     private String blockPackage, blockName;
     private JavaFile blockClassJavaFile;
@@ -23,60 +21,27 @@ public class JavaBlockCompiler extends BlockInformation
     private ClassName blockClass, superClass;
     
     private List<CodeBlock> constructorSpecList = new ArrayList<CodeBlock>();
-    private CodeBlock.Builder constructorSpec = CodeBlock.builder();
+    public CodeBlock.Builder constructorSpec = CodeBlock.builder();
     
     private MethodSpec blockConstructor;
     private TypeSpec blockBuilder;
     
     private CodeBlock unlocalizedNameStatement, creativeTabStatement, hardnessStatement, resistanceStatement, stepSoundStatement;
     
-    ClassName blockSuperclass = ClassName.get("net.minecraft.block", "Block");
-    ClassName materialClass = ClassName.get("net.minecraft.block", "Material");
+    public ClassName blockSuperclass = ClassName.get("net.minecraft.block", "Block");
+    public ClassName materialClass = ClassName.get("net.minecraft.block", "Material");
     
-    public void initSimpleBlock()
+    public abstract void setBlockInformation();
+    
+    public abstract void initializeBlockClass();
+    
+    public abstract void initCompiler();
+    
+    public void compile()
     {
-        this.setUnlocalizedNameStatement(CodeBlock.builder().addStatement("this.$N(\"$L\")", "setUnlocalizedName", this.getUnlocalizedName()).build());
-        this.setCreativeTabStatement(CodeBlock.builder().addStatement("this.$N($L)", "setCreativeTab", this.getCreativeTab()).build());
-        this.setHardnessStatement(CodeBlock.builder().addStatement("this.$N($LF)", "setHardness", this.getHardness()).build());
-        this.setResistanceStatement(CodeBlock.builder().addStatement("this.$N($LF)", "setResistance", this.getResistance()).build());
-        this.setStepSoundStatement(CodeBlock.builder().addStatement("this.$N($L)", "setStepSound", this.getStepSound()).build());
-        
-        this.setBlockClass(ClassName.get(this.getBlockPackage(), this.getBlockName()));
-        this.setSuperClass(blockSuperclass);
-        
-        this.getConstructorSpecList().add(CodeBlock.builder().addStatement("super($L)", materialClass.simpleName().toLowerCase()).build());
-        this.getConstructorSpecList().add(unlocalizedNameStatement);
-        this.getConstructorSpecList().add(creativeTabStatement);
-        this.getConstructorSpecList().add(hardnessStatement);
-        this.getConstructorSpecList().add(resistanceStatement);
-        this.getConstructorSpecList().add(stepSoundStatement);
-        
-        for(int i = 0; i < this.getConstructorSpecList().size(); i++)
-        {
-            this.constructorSpec.add(this.getConstructorSpecList().get(i));
-        }
-        
-        // TODO Exemple: If needed for constructor declaration
-        // ParameterSpec unlocalizedName = ParameterSpec.builder(String.class, "unlocalizedName").build();
-        //
-        // ParameterSpec material = ParameterSpec.builder(materialClass, "material").build();
-        // ParameterSpec hardness = ParameterSpec.builder(Float.class, "hardness").build();
-        // ParameterSpec resistance = ParameterSpec.builder(Float.class, "resistance").build();
-        //
-        // parametersList.add(unlocalizedName);
-        // parametersList.add(material);
-        // parametersList.add(hardness);
-        // parametersList.add(resistance);
-        //
-        // for(int i = 0; i < parametersList.size(); i++)
-        // {
-        // this.parameters.addParameter(parametersList.get(i).type, parametersList.get(i).name);
-        // }
-        
-        this.setBasicBlockConstructor(MethodSpec.constructorBuilder().addParameter(materialClass, "material").addModifiers(Modifier.PUBLIC).addCode(this.constructorSpec.build()).build());
-        
-        this.setBlockBuilder(TypeSpec.classBuilder(this.getBlockClass()).superclass(this.getSuperClass()).addModifiers(Modifier.PUBLIC).addMethod(this.getBasicBlockConstructor()).build());
-        this.setBlockClassJavaFile(JavaFile.builder(this.getBlockClass().packageName(), getBlockBuilder()).build());
+        this.setBlockInformation();
+        this.initializeBlockClass();
+        this.initCompiler();
     }
     
     public CodeBlock getUnlocalizedNameStatement()
@@ -128,16 +93,6 @@ public class JavaBlockCompiler extends BlockInformation
     {
         this.stepSoundStatement = stepSoundStatement;
     }
-    
-    /**
-     * Needed parameter for simple block before <u>{@code addBasicBlock()}</u> <br>
-     * <i>{@code setBlockPackage(String)} <br>
-     * {@code setBlockName(String)}<br>
-     * {@code setUnlocalizedName(String)}<br>
-     * {@code setHardness(float)}<br>
-     * {@code setResistance}<br>
-     * {@code setStepSound((String) StepSound)}</i></b>
-     */
     
     public String getBlockPackage()
     {
