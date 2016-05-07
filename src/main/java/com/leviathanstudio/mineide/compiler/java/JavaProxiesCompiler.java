@@ -5,13 +5,14 @@ import java.io.IOException;
 
 import javax.lang.model.element.Modifier;
 
+import com.leviathanstudio.mineide.utils.Utils;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.MethodSpec.Builder;
 import com.squareup.javapoet.TypeSpec;
 
-public class JavaProxiesCompiler
+public abstract class JavaProxiesCompiler
 {
     private String proxiesPackage;
     
@@ -29,8 +30,11 @@ public class JavaProxiesCompiler
     private ClassName clientProxyClass, commonProxyClass, serverProxyClass;
     private Builder initMethod, preInitMethod;
     
-    public void compile() throws IOException
+    public abstract void setProxies();
+    
+    public JavaProxiesCompiler compile() throws IOException
     {
+        this.setProxies();
         this.clientProxyClass = ClassName.get(getProxiesPackage(), "ClientProxy");
         this.commonProxyClass = ClassName.get(getProxiesPackage(), "CommonProxy");
         this.serverProxyClass = ClassName.get(getProxiesPackage(), "ServerProxy");
@@ -41,6 +45,11 @@ public class JavaProxiesCompiler
         this.initCommonProxy();
         this.initClientProxy();
         this.initServerProxy();
+        
+        this.getClientProxyJavaFile().writeTo(Utils.FORGE_SRC_JAVA_DIR);
+        this.getCommonProxyJavaFile().writeTo(Utils.FORGE_SRC_JAVA_DIR);
+        this.getServerProxyJavaFile().writeTo(Utils.FORGE_SRC_JAVA_DIR);
+        return this;
     }
     
     private void initClientProxy() throws IOException

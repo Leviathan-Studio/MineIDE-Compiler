@@ -7,7 +7,6 @@ import com.leviathanstudio.mineide.compiler.java.JavaProxiesCompiler;
 import com.leviathanstudio.mineide.compiler.java.block.JavaBlockCompiler;
 import com.leviathanstudio.mineide.compiler.java.registry.JavaGameRegistry;
 import com.leviathanstudio.mineide.compiler.json.JsonMCModInfoCompiler;
-import com.leviathanstudio.mineide.utils.Utils;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
@@ -23,23 +22,22 @@ public class MineIDECompiler
         
         mainClassCompiler.setMainClassPackage("fr.zeamateis.test");
         mainClassCompiler.setMainClassName("testMainClass");
-        mainClassCompiler.compile();
-        mainClassCompiler.getMainClassJavaFile().writeTo(Utils.FORGE_SRC_JAVA_DIR);
-        
-        JavaProxiesCompiler proxiesCompiler = new JavaProxiesCompiler();
-        proxiesCompiler.setProxiesPackage(mainClassCompiler.getMainClassPackage() + ".proxy");
-        proxiesCompiler.compile();
-        proxiesCompiler.getClientProxyJavaFile().writeTo(Utils.FORGE_SRC_JAVA_DIR);
-        proxiesCompiler.getCommonProxyJavaFile().writeTo(Utils.FORGE_SRC_JAVA_DIR);
-        proxiesCompiler.getServerProxyJavaFile().writeTo(Utils.FORGE_SRC_JAVA_DIR);
-        
-        JsonMCModInfoCompiler mcModInfoCompiler = new JsonMCModInfoCompiler();
-        mcModInfoCompiler.compile();
         
         ClassName blockSuperclass = ClassName.get("net.minecraft.block", "Block");
         ClassName materialClass = ClassName.get("net.minecraft.block", "Material");
         
-        JavaBlockCompiler testBlock1Compiler = new JavaBlockCompiler()
+        new JavaProxiesCompiler()
+        {
+            @Override
+            public void setProxies()
+            {
+                this.setProxiesPackage(mainClassCompiler.getMainClassPackage() + ".proxy");
+            }
+        }.compile();
+        
+        new JsonMCModInfoCompiler().compile();
+        
+        new JavaBlockCompiler()
         {
             @Override
             public void setConstructor()
@@ -77,9 +75,9 @@ public class MineIDECompiler
                 this.getConstructorSpecList().add(this.getResistanceStatement());
                 this.getConstructorSpecList().add(this.getStepSoundStatement());
             }
-        };
+        }.compile();
         
-        JavaBlockCompiler testBlock2Compiler = new JavaBlockCompiler()
+        new JavaBlockCompiler()
         {
             @Override
             public void setConstructor()
@@ -111,18 +109,18 @@ public class MineIDECompiler
                 this.getConstructorSpecList().add(this.getCreativeTabStatement());
                 this.getConstructorSpecList().add(this.getLightLevelStatement());
             }
-        };
+        }.compile();
         
-        JavaGameRegistry gameRegistry = new JavaGameRegistry();
+        JavaGameRegistry gameRegistry = new JavaGameRegistry()
+        {
+            @Override
+            public void initializeGameRegistry()
+            {
+                this.getGameRegistryList().add(CodeBlock.builder().addStatement("GameRegistry.registerBlock(" + "\"$N\"" + "," + " $L" + ")", "BlockTest", "BlockTest").build());
+                this.getGameRegistryList().add(CodeBlock.builder().addStatement("GameRegistry.registerItem(" + "\"$N\"" + "," + " $L" + ")", "ItemTest", "ItemTest").build());
+            }
+        }.compile();
         
-        gameRegistry.setGameRegistry("Block", "testBlock");
-        System.out.println(gameRegistry.getGameRegistry());
-        gameRegistry.setGameRegistry("Item", "testItem");
-        System.out.println(gameRegistry.getGameRegistry());
-        
-        testBlock1Compiler.compile();
-        testBlock1Compiler.getBlockClassJavaFile().writeTo(Utils.FORGE_SRC_JAVA_DIR);
-        testBlock2Compiler.compile();
-        testBlock2Compiler.getBlockClassJavaFile().writeTo(Utils.FORGE_SRC_JAVA_DIR);
+        mainClassCompiler.compile();
     }
 }

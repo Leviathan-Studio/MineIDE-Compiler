@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.lang.model.element.Modifier;
 
+import com.leviathanstudio.mineide.utils.Utils;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
@@ -16,17 +17,20 @@ public class JavaMainClassCompiler
     private String mainClassPackage, mainClassName;
     private JavaFile mainClassJavaFile;
     
+    private MethodSpec preInitMethod, initMethod, postInitMethod;
+    
+    String commonPackageForge = "net.minecraftforge.fml.common";
+    
+    public ClassName eventHandlerClass = ClassName.get(commonPackageForge + ".Mod", "EventHandler");
+    public ClassName preInitEventClass = ClassName.get(commonPackageForge + ".event", "FMLPreInitializationEvent");
+    public ClassName initEventClass = ClassName.get(commonPackageForge + ".event", "FMLInitializationEvent");
+    public ClassName postInitEventClass = ClassName.get(commonPackageForge + ".event", "FMLPostInitializationEvent");
+    
     public void compile() throws IOException
     {
-        String commonPackageForge = "net.minecraftforge.fml.common";
         ClassName classMain = ClassName.get(getMainClassPackage(), getMainClassName());
         
         ClassName loggerClass = ClassName.get("org.apache.logging.log4j", "Logger");
-        
-        ClassName eventHandlerClass = ClassName.get(commonPackageForge + ".Mod", "EventHandler");
-        ClassName preInitEventClass = ClassName.get(commonPackageForge + ".event", "FMLPreInitializationEvent");
-        ClassName initEventClass = ClassName.get(commonPackageForge + ".event", "FMLInitializationEvent");
-        ClassName postInitEventClass = ClassName.get(commonPackageForge + ".event", "FMLPostInitializationEvent");
         
         ClassName clientProxyClass = ClassName.get(getMainClassPackage() + ".proxy", "ClientProxy");
         ClassName commonProxyClass = ClassName.get(getMainClassPackage() + ".proxy", "CommonProxy");
@@ -47,13 +51,10 @@ public class JavaMainClassCompiler
         
         FieldSpec loggerField = FieldSpec.builder(loggerClass, "logger", Modifier.PUBLIC, Modifier.STATIC).build();
         
-        MethodSpec preInitMethod = MethodSpec.methodBuilder("preInit").addModifiers(Modifier.PUBLIC).addAnnotation(eventHandlerClass).addParameter(preInitEventClass, "event").addStatement("logger = event.getModLog()").addStatement("proxy.preInit(event.getSuggestedConfigurationFile())").build();
-        MethodSpec initMethod = MethodSpec.methodBuilder("init").addModifiers(Modifier.PUBLIC).addAnnotation(eventHandlerClass).addParameter(initEventClass, "event").addStatement("proxy.init()").build();
-        MethodSpec postInitMethod = MethodSpec.methodBuilder("postInit").addModifiers(Modifier.PUBLIC).addAnnotation(eventHandlerClass).addParameter(postInitEventClass, "event").build();
-        
-        TypeSpec mainClass = TypeSpec.classBuilder(classMain).addAnnotation(modAnnotation).addModifiers(Modifier.PUBLIC).addField(instanceField).addField(proxyField).addField(loggerField).addMethod(preInitMethod).addMethod(initMethod).addMethod(postInitMethod).build();
+        TypeSpec mainClass = TypeSpec.classBuilder(classMain).addAnnotation(modAnnotation).addModifiers(Modifier.PUBLIC).addField(instanceField).addField(proxyField).addField(loggerField).addMethod(this.getPreInitMethod()).addMethod(this.getInitMethod()).addMethod(this.getPostInitMethod()).build();
         
         this.setMainClassJavaFile(JavaFile.builder(classMain.packageName(), mainClass).build());
+        this.getMainClassJavaFile().writeTo(Utils.FORGE_SRC_JAVA_DIR);
     }
     
     public JavaFile getMainClassJavaFile()
@@ -84,5 +85,35 @@ public class JavaMainClassCompiler
     public void setMainClassName(String className)
     {
         this.mainClassName = className;
+    }
+    
+    public MethodSpec getPreInitMethod()
+    {
+        return preInitMethod;
+    }
+    
+    public void setPreInitMethod(MethodSpec preInitMethod)
+    {
+        this.preInitMethod = preInitMethod;
+    }
+    
+    public MethodSpec getInitMethod()
+    {
+        return initMethod;
+    }
+    
+    public void setInitMethod(MethodSpec initMethod)
+    {
+        this.initMethod = initMethod;
+    }
+    
+    public MethodSpec getPostInitMethod()
+    {
+        return postInitMethod;
+    }
+    
+    public void setPostInitMethod(MethodSpec postInitMethod)
+    {
+        this.postInitMethod = postInitMethod;
     }
 }

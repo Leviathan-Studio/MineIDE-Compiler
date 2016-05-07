@@ -1,11 +1,13 @@
 package com.leviathanstudio.mineide.compiler.java.block;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.lang.model.element.Modifier;
 
 import com.leviathanstudio.mineide.compiler.information.BlockInformation;
+import com.leviathanstudio.mineide.utils.Utils;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.JavaFile;
@@ -35,7 +37,7 @@ public abstract class JavaBlockCompiler extends BlockInformation
     
     public abstract void initializeBlockClass();
     
-    public void compile()
+    public JavaBlockCompiler compile() throws IOException
     {
         // First Phase
         this.setBlockInformation();
@@ -69,6 +71,9 @@ public abstract class JavaBlockCompiler extends BlockInformation
         this.setConstructor();
         this.setBlockBuilder(TypeSpec.classBuilder(this.getBlockClass()).superclass(this.getSuperClass()).addModifiers(Modifier.PUBLIC).addMethod(this.getBasicBlockConstructor()).build());
         this.setBlockClassJavaFile(JavaFile.builder(this.getBlockClass().packageName(), getBlockBuilder()).build());
+        
+        this.getBlockClassJavaFile().writeTo(Utils.FORGE_SRC_JAVA_DIR);
+        return this;
     }
     
     public CodeBlock getUnlocalizedNameStatement()
