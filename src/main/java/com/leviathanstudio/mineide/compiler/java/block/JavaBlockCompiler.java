@@ -73,6 +73,7 @@ public abstract class JavaBlockCompiler extends BlockInformation
         this.setBlockClassJavaFile(JavaFile.builder(this.getBlockClass().packageName(), getBlockBuilder()).build());
         
         this.getBlockClassJavaFile().writeTo(Utils.FORGE_SRC_JAVA_DIR);
+        
         return this;
     }
     

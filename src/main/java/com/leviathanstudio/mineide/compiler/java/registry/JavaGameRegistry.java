@@ -3,10 +3,13 @@ package com.leviathanstudio.mineide.compiler.java.registry;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 
 public abstract class JavaGameRegistry
 {
+    public ClassName gameRegistryClass = ClassName.get("net.minecraftforge.fml.common.registry", "GameRegistry");
+    
     private List<CodeBlock> gameRegistryList = new ArrayList<CodeBlock>();
     private CodeBlock.Builder gameRegistry = CodeBlock.builder();
     

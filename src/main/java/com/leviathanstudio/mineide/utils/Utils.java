@@ -18,10 +18,10 @@ public class Utils
     public static final File PROJECT = new File(ROOT, "project");
     public static final File LOG = new File(ROOT, "log");
     public static final File FORGE_DIR = new File(ROOT + "/workspace/forge");
-    public static final File FORGE_SRC_JAVA_DIR = new File(ROOT + "/test/java");
-    public static final File FORGE_SRC_RESOURCE_DIR = new File(ROOT + "/test/resources");
-    // public static final File FORGE_SRC_JAVA_DIR = new File(ROOT + "/workspace/forge/src/main/java");
-    // public static final File FORGE_SRC_RESOURCE_DIR = new File(ROOT + "/workspace/forge/src/main/resources");
+    // public static final File FORGE_SRC_JAVA_DIR = new File(ROOT + "/test/java");
+    // public static final File FORGE_SRC_RESOURCE_DIR = new File(ROOT + "/test/resources");
+    public static final File FORGE_SRC_JAVA_DIR = new File(ROOT + "/workspace/forge/src/main/java");
+    public static final File FORGE_SRC_RESOURCE_DIR = new File(ROOT + "/workspace/forge/src/main/resources");
     
     public static void writeFile(File filePath, String fileName, String fileContent, String fileExtension)
     {
