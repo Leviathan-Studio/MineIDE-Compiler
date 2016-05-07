@@ -69,7 +69,7 @@ public abstract class JavaBlockCompiler extends BlockInformation
             this.constructorSpec.add(this.getConstructorSpecList().get(i));
         }
         this.setConstructor();
-        this.setBlockBuilder(TypeSpec.classBuilder(this.getBlockClass()).superclass(this.getSuperClass()).addModifiers(Modifier.PUBLIC).addMethod(this.getBasicBlockConstructor()).build());
+        this.setBlockBuilder(TypeSpec.classBuilder(this.getBlockClass()).superclass(this.getSuperClass()).addModifiers(Modifier.PUBLIC).addMethod(this.getBlockConstructor()).build());
         this.setBlockClassJavaFile(JavaFile.builder(this.getBlockClass().packageName(), getBlockBuilder()).build());
         
         this.getBlockClassJavaFile().writeTo(Utils.FORGE_SRC_JAVA_DIR);
@@ -207,12 +207,12 @@ public abstract class JavaBlockCompiler extends BlockInformation
         this.blockClassJavaFile = blockClassJavaFile;
     }
     
-    public MethodSpec getBasicBlockConstructor()
+    public MethodSpec getBlockConstructor()
     {
         return blockConstructor;
     }
     
-    public void setBasicBlockConstructor(MethodSpec basicBlockConstructor)
+    public void setBlockConstructor(MethodSpec basicBlockConstructor)
     {
         this.blockConstructor = basicBlockConstructor;
     }
