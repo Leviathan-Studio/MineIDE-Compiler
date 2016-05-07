@@ -66,7 +66,7 @@ public class MineIDECompiler
                 this.setLightLevelStatement(CodeBlock.builder().addStatement("this.$N($LF)", "setLightLevel", this.getLightLevel()).build());
                 this.setSuperClass(blockSuperclass);
                 
-                this.getConstructorSpecList().add(CodeBlock.builder().addStatement("super($L.$N)", materialClass, "ground").build());
+                this.getConstructorSpecList().add(CodeBlock.builder().addStatement("super($L.$N)", materialClass, "WOOD").build());
                 this.getConstructorSpecList().add(this.getUnlocalizedNameStatement());
                 // this.getConstructorSpecList().add(this.getCreativeTabStatement());
                 this.getConstructorSpecList().add(this.getLightLevelStatement());
