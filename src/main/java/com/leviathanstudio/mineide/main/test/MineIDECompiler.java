@@ -1,4 +1,4 @@
-package com.leviathanstudio.mineide.main;
+package com.leviathanstudio.mineide.main.test;
 
 import javax.lang.model.element.Modifier;
 
@@ -120,6 +120,10 @@ public class MineIDECompiler
                 this.getGameRegistryList().add(CodeBlock.builder().addStatement("GameRegistry.registerItem(" + "\"$N\"" + "," + " $L" + ")", "ItemTest", "ItemTest").build());
             }
         }.compile();
+        
+        mainClassCompiler.setPreInitMethod(MethodSpec.methodBuilder("preInit").addModifiers(Modifier.PUBLIC).addAnnotation(mainClassCompiler.eventHandlerClass).addParameter(mainClassCompiler.preInitEventClass, "event").addStatement("logger = event.getModLog()").addStatement("proxy.preInit(event.getSuggestedConfigurationFile())").addCode(gameRegistry.getGameRegistry().build()).build());
+        mainClassCompiler.setInitMethod(MethodSpec.methodBuilder("init").addModifiers(Modifier.PUBLIC).addAnnotation(mainClassCompiler.eventHandlerClass).addParameter(mainClassCompiler.initEventClass, "event").addStatement("proxy.init()").build());
+        mainClassCompiler.setPostInitMethod(MethodSpec.methodBuilder("postInit").addModifiers(Modifier.PUBLIC).addAnnotation(mainClassCompiler.eventHandlerClass).addParameter(mainClassCompiler.postInitEventClass, "event").build());
         
         mainClassCompiler.compile();
     }
