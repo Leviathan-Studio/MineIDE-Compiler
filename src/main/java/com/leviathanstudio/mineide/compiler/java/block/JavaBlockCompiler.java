@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.lang.model.element.Modifier;
 
-import com.leviathanstudio.mineide.compiler.information.BlockInformation;
+import com.leviathanstudio.mineide.compiler.JavaCompilerInformation;
 import com.leviathanstudio.mineide.utils.Utils;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -14,7 +14,7 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
-public abstract class JavaBlockCompiler extends BlockInformation
+public abstract class JavaBlockCompiler extends JavaCompilerInformation
 {
     private String blockClassPackage, blockClassName;
     private JavaFile blockClassJavaFile;
@@ -28,8 +28,6 @@ public abstract class JavaBlockCompiler extends BlockInformation
     
     private MethodSpec blockConstructor;
     private TypeSpec blockBuilder;
-    
-    private CodeBlock unlocalizedNameStatement, creativeTabStatement, hardnessStatement, resistanceStatement, stepSoundStatement, harvestLevelStatement, lightLevelStatement, lightOpacityStatement, unbreakableStatement, tickRandomlyStatement;
     
     public abstract void setConstructor();
     
@@ -75,106 +73,6 @@ public abstract class JavaBlockCompiler extends BlockInformation
         this.getBlockClassJavaFile().writeTo(Utils.FORGE_SRC_JAVA_DIR);
         
         return this;
-    }
-    
-    public CodeBlock getUnlocalizedNameStatement()
-    {
-        return unlocalizedNameStatement;
-    }
-    
-    public void setUnlocalizedNameStatement(CodeBlock unlocalizedNameStatement)
-    {
-        this.unlocalizedNameStatement = unlocalizedNameStatement;
-    }
-    
-    public CodeBlock getCreativeTabStatement()
-    {
-        return creativeTabStatement;
-    }
-    
-    public void setCreativeTabStatement(CodeBlock creativeTabStatement)
-    {
-        this.creativeTabStatement = creativeTabStatement;
-    }
-    
-    public CodeBlock getHardnessStatement()
-    {
-        return hardnessStatement;
-    }
-    
-    public void setHardnessStatement(CodeBlock hardnessStatement)
-    {
-        this.hardnessStatement = hardnessStatement;
-    }
-    
-    public CodeBlock getResistanceStatement()
-    {
-        return resistanceStatement;
-    }
-    
-    public void setResistanceStatement(CodeBlock resistanceStatement)
-    {
-        this.resistanceStatement = resistanceStatement;
-    }
-    
-    public CodeBlock getStepSoundStatement()
-    {
-        return stepSoundStatement;
-    }
-    
-    public void setStepSoundStatement(CodeBlock stepSoundStatement)
-    {
-        this.stepSoundStatement = stepSoundStatement;
-    }
-    
-    public CodeBlock getHarvestLevelStatement()
-    {
-        return harvestLevelStatement;
-    }
-    
-    public void setHarvestLevelStatement(CodeBlock harvestLevelStatement)
-    {
-        this.harvestLevelStatement = harvestLevelStatement;
-    }
-    
-    public CodeBlock getLightLevelStatement()
-    {
-        return lightLevelStatement;
-    }
-    
-    public void setLightLevelStatement(CodeBlock lightLevelStatement)
-    {
-        this.lightLevelStatement = lightLevelStatement;
-    }
-    
-    public CodeBlock getLightOpacityStatement()
-    {
-        return lightOpacityStatement;
-    }
-    
-    public void setLightOpacityStatement(CodeBlock lightOpacityStatement)
-    {
-        this.lightOpacityStatement = lightOpacityStatement;
-    }
-    
-    public CodeBlock getUnbreakableStatement()
-    {
-        return unbreakableStatement;
-    }
-    
-    public void setUnbreakableStatement(CodeBlock unbreakableStatement)
-    {
-        this.unbreakableStatement = unbreakableStatement;
-    }
-    
-    public CodeBlock getTickRandomlyStatement()
-    {
-        return tickRandomlyStatement;
-    }
-    
-    public void setTickRandomlyStatement(CodeBlock tickRandomlyStatement)
-    {
-        this.tickRandomlyStatement = tickRandomlyStatement;
     }
     
     public String getBlockClassPackage()

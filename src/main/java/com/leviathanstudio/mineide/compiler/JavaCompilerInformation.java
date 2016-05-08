@@ -1,11 +1,11 @@
-package com.leviathanstudio.mineide.compiler.information;
+package com.leviathanstudio.mineide.compiler;
 
-public class BlockInformation
+public class JavaCompilerInformation extends JavaCompilerStatement
 {
     private String unlocalizedName, stepSound, creativeTab;
     private float hardness, resistance, lightLevel;
-    private int lightOpacity, harvestLevel;
-    private boolean unbreakable, tickRandom;
+    private int lightOpacity, harvestLevel, maxStackSize, maxDamage;
+    private boolean unbreakable, tickRandom, noRepair;
     
     public String getUnlocalizedName()
     {
@@ -105,5 +105,35 @@ public class BlockInformation
     public void setTickRandom(boolean tickRandom)
     {
         this.tickRandom = tickRandom;
+    }
+    
+    public int getMaxStackSize()
+    {
+        return maxStackSize;
+    }
+    
+    public void setMaxStackSize(int maxStackSize)
+    {
+        this.maxStackSize = maxStackSize;
+    }
+    
+    public int getMaxDamage()
+    {
+        return maxDamage;
+    }
+    
+    public void setMaxDamage(int maxDamage)
+    {
+        this.maxDamage = maxDamage;
+    }
+    
+    public boolean isNoRepair()
+    {
+        return noRepair;
+    }
+    
+    public void setNoRepair(boolean noRepair)
+    {
+        this.noRepair = noRepair;
     }
 }

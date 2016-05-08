@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.lang.model.element.Modifier;
 
-import com.leviathanstudio.mineide.compiler.information.BlockInformation;
+import com.leviathanstudio.mineide.compiler.JavaCompilerInformation;
 import com.leviathanstudio.mineide.utils.Utils;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -14,7 +14,7 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
-public abstract class JavaItemCompiler extends BlockInformation
+public abstract class JavaItemCompiler extends JavaCompilerInformation
 {
     private String itemClassPackage, itemClassName;
     private JavaFile itemClassJavaFile;
@@ -28,8 +28,6 @@ public abstract class JavaItemCompiler extends BlockInformation
     
     private MethodSpec itemConstructor;
     private TypeSpec itemBuilder;
-    
-    private CodeBlock unlocalizedNameStatement, creativeTabStatement, maxStackSizeStatement, maxDamageStatement, noRepairStatement;
     
     public abstract void setConstructor();
     
@@ -75,56 +73,6 @@ public abstract class JavaItemCompiler extends BlockInformation
         this.getItemClassJavaFile().writeTo(Utils.FORGE_SRC_JAVA_DIR);
         
         return this;
-    }
-    
-    public CodeBlock getUnlocalizedNameStatement()
-    {
-        return unlocalizedNameStatement;
-    }
-    
-    public void setUnlocalizedNameStatement(CodeBlock unlocalizedNameStatement)
-    {
-        this.unlocalizedNameStatement = unlocalizedNameStatement;
-    }
-    
-    public CodeBlock getCreativeTabStatement()
-    {
-        return creativeTabStatement;
-    }
-    
-    public void setCreativeTabStatement(CodeBlock creativeTabStatement)
-    {
-        this.creativeTabStatement = creativeTabStatement;
-    }
-    
-    public CodeBlock getMaxStackSizeStatement()
-    {
-        return maxStackSizeStatement;
-    }
-    
-    public void setMaxStackSizeStatement(CodeBlock maxStackSizeStatement)
-    {
-        this.maxStackSizeStatement = maxStackSizeStatement;
-    }
-    
-    public CodeBlock getMaxDamageStatement()
-    {
-        return maxDamageStatement;
-    }
-    
-    public void setMaxDamageStatement(CodeBlock maxDamageStatement)
-    {
-        this.maxDamageStatement = maxDamageStatement;
-    }
-    
-    public CodeBlock getNoRepairStatement()
-    {
-        return noRepairStatement;
-    }
-    
-    public void setNoRepairStatement(CodeBlock noRepairStatement)
-    {
-        this.noRepairStatement = noRepairStatement;
     }
     
     public String getItemClassPackage()
