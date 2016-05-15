@@ -96,7 +96,9 @@ public class MineIDECompiler
             
             @Override
             public void initializeBlocks()
-            {}
+            {
+                this.initBlocksMethod.addCode(CodeBlock.builder().addStatement("$N = new $L()", "blockTest", blockTest2.getBlockClassName()).build());
+            }
             
             @Override
             public void setRenderBlocks()
@@ -141,7 +143,7 @@ public class MineIDECompiler
         // }
         // }.compile();
         
-        mainClassCompiler.setPreInitMethod(MethodSpec.methodBuilder("preInit").addModifiers(Modifier.PUBLIC).addAnnotation(mainClassCompiler.eventHandlerClass).addParameter(mainClassCompiler.preInitEventClass, "event").addStatement("logger = event.getModLog()").addStatement("proxy.preInit(event.getSuggestedConfigurationFile())").addStatement("new $T.init()", blocksManagerCompiler.getBlocksManagerClass()).build());
+        mainClassCompiler.setPreInitMethod(MethodSpec.methodBuilder("preInit").addModifiers(Modifier.PUBLIC).addAnnotation(mainClassCompiler.eventHandlerClass).addParameter(mainClassCompiler.preInitEventClass, "event").addStatement("logger = event.getModLog()").addStatement("proxy.preInit(event.getSuggestedConfigurationFile())").addStatement("$T.init()", blocksManagerCompiler.getBlocksManagerClass()).build());
         mainClassCompiler.setInitMethod(MethodSpec.methodBuilder("init").addModifiers(Modifier.PUBLIC).addAnnotation(mainClassCompiler.eventHandlerClass).addParameter(mainClassCompiler.initEventClass, "event").addStatement("proxy.init()").build());
         mainClassCompiler.setPostInitMethod(MethodSpec.methodBuilder("postInit").addModifiers(Modifier.PUBLIC).addAnnotation(mainClassCompiler.eventHandlerClass).addParameter(mainClassCompiler.postInitEventClass, "event").build());
         

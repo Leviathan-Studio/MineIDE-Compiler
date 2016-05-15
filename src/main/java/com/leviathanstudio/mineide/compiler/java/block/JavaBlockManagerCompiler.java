@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.lang.model.element.Modifier;
 
+import com.leviathanstudio.mineide.utils.Utils;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -16,6 +17,8 @@ public abstract class JavaBlockManagerCompiler
     private JavaFile blockManagerJavaFile;
     
     public Builder initBlocksMethod, registerBlocksMethod, renderBlocksMethod;
+    
+    ClassName blockSuperclass = ClassName.get("net.minecraft.block", "Block");
     
     public abstract void initializeBlocks();
     
@@ -40,11 +43,11 @@ public abstract class JavaBlockManagerCompiler
         renderBlocksMethod = MethodSpec.methodBuilder("renderBlock").addModifiers(Modifier.PRIVATE, Modifier.STATIC);
         this.setRenderBlocks();
         
-        TypeSpec blocksManagerBuilder = TypeSpec.classBuilder(this.getBlocksManagerClass().simpleName()).addModifiers(Modifier.PUBLIC).addMethod(initMethod.addStatement("this.$N()", "initBlock").addStatement("this.$N()", "registerBlock").addStatement("this.$N()", "renderBlock").build()).addMethod(this.initBlocksMethod.build()).addMethod(this.registerBlocksMethod.build()).addMethod(this.renderBlocksMethod.build()).build();
+        TypeSpec blocksManagerBuilder = TypeSpec.classBuilder(this.getBlocksManagerClass().simpleName()).addField(blockSuperclass, "blockTest", Modifier.PUBLIC, Modifier.STATIC).addModifiers(Modifier.PUBLIC).addMethod(initMethod.addStatement("$N()", "initBlock").addStatement("$N()", "registerBlock").addStatement("$N()", "renderBlock").build()).addMethod(this.initBlocksMethod.build()).addMethod(this.registerBlocksMethod.build()).addMethod(this.renderBlocksMethod.build()).build();
         
         this.setBlockManagerJavaFile(JavaFile.builder(this.getBlocksManagerClass().packageName(), blocksManagerBuilder).build());
         
-        this.getBlockManagerJavaFile().writeTo(System.out);
+        this.getBlockManagerJavaFile().writeTo(Utils.FORGE_SRC_JAVA_DIR);
         
         return this;
     }
