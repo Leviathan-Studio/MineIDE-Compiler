@@ -10,19 +10,19 @@ import com.leviathanstudio.mineide.utils.Utils;
 
 public class JsonMCModInfoCompiler
 {
-    private String modid, name, description, version, mcversion, url, updateUrl, credits, logoFile;
-    private List<String> authorList = new ArrayList<String>();
-    private List<String> screenshots = new ArrayList<String>();
+    private String       modid, name, description, version, mcversion, url, updateUrl, credits, logoFile;
+    private List<String> authorList   = new ArrayList<String>();
+    private List<String> screenshots  = new ArrayList<String>();
     private List<String> dependencies = new ArrayList<String>();
-    
+
     public void compile() throws IOException
     {
         JsonWriter writer = new JsonWriter(new FileWriter(Utils.FORGE_SRC_RESOURCE_DIR + "/mcmod.info"));
-        
+
         writer.setIndent("  ");
-        
+
         writer.beginArray().beginObject();
-        
+
         writer.name("modid").value(this.getModid());
         writer.name("name").value(this.getName());
         writer.name("description").value(this.getDescription());
@@ -30,138 +30,132 @@ public class JsonMCModInfoCompiler
         writer.name("mcversion").value(this.getMCVersion());
         writer.name("url").value(this.getUrl());
         writer.name("updateUrl").value(this.getUpdateUrl());
-        
+
         writer.name("authorList").beginArray();
-        for(int i = 0; i < authorList.size(); i++)
-        {
-            writer.value(authorList.get(i));
-        }
+        for (int i = 0; i < this.authorList.size(); i++)
+            writer.value(this.authorList.get(i));
         writer.endArray();
-        
+
         writer.name("credits").value(this.getCredits());
         writer.name("logoFile").value(this.getLogoFile());
-        
+
         writer.name("screenshots").beginArray();
-        for(int i = 0; i < screenshots.size(); i++)
-        {
-            writer.value(screenshots.get(i));
-        }
+        for (int i = 0; i < this.screenshots.size(); i++)
+            writer.value(this.screenshots.get(i));
         writer.endArray();
-        
+
         writer.name("dependencies").beginArray();
-        for(int i = 0; i < dependencies.size(); i++)
-        {
-            writer.value(dependencies.get(i));
-        }
+        for (int i = 0; i < this.dependencies.size(); i++)
+            writer.value(this.dependencies.get(i));
         writer.endArray();
-        
+
         writer.endObject().endArray();
-        
+
         writer.close();
     }
-    
+
     public String getModid()
     {
-        return modid;
+        return this.modid;
     }
-    
+
     public void setModid(String modid)
     {
         this.modid = modid;
     }
-    
+
     public String getName()
     {
-        return name;
+        return this.name;
     }
-    
+
     public void setName(String name)
     {
         this.name = name;
     }
-    
+
     public String getDescription()
     {
-        return description;
+        return this.description;
     }
-    
+
     public void setDescription(String description)
     {
         this.description = description;
     }
-    
+
     public String getVersion()
     {
-        return version;
+        return this.version;
     }
-    
+
     public void setVersion(String version)
     {
         this.version = version;
     }
-    
+
     public String getMCVersion()
     {
-        return mcversion;
+        return this.mcversion;
     }
-    
+
     public void setMCVersion(String mcversion)
     {
         this.mcversion = mcversion;
     }
-    
+
     public String getUrl()
     {
-        return url;
+        return this.url;
     }
-    
+
     public void setUrl(String url)
     {
         this.url = url;
     }
-    
+
     public String getUpdateUrl()
     {
-        return updateUrl;
+        return this.updateUrl;
     }
-    
+
     public void setUpdateUrl(String updateUrl)
     {
         this.updateUrl = updateUrl;
     }
-    
+
     public String getCredits()
     {
-        return credits;
+        return this.credits;
     }
-    
+
     public void setCredits(String credits)
     {
         this.credits = credits;
     }
-    
+
     public String getLogoFile()
     {
-        return logoFile;
+        return this.logoFile;
     }
-    
+
     public void setLogoFile(String logoFile)
     {
         this.logoFile = logoFile;
     }
-    
+
     public List<String> getAuthorList()
     {
-        return authorList;
+        return this.authorList;
     }
-    
+
     public List<String> getScreenshots()
     {
-        return screenshots;
+        return this.screenshots;
     }
-    
+
     public List<String> getDependencies()
     {
-        return dependencies;
+        return this.dependencies;
     }
 }
