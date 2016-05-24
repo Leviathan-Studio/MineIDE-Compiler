@@ -34,7 +34,7 @@ apply plugin: 'idea'
 
 group = "com.leviathanstudio.mineide"
 archivesBaseName = 'MineIDE-Compiler'
-version = '0.0.1'
+version = '0.0.2'
 compileJava.options.encoding = 'UTF-8'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
