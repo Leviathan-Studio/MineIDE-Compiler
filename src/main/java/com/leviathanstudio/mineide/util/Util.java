@@ -18,12 +18,8 @@ public class Util
     public static final File ROOT = EnumOS.getWorkingDirectory();
     public static final File CONFIG = new File(Util.ROOT, "config");
     public static final File PROJECT = new File(Util.ROOT, "project");
-    public static final File LOG = new File(Util.ROOT, "log");
+    public static final File LOG_DIR = new File(Util.ROOT, "log/");
     public static final File FORGE_DIR = new File(Util.ROOT + "/workspace/forge");
-    // public static final File FORGE_SRC_JAVA_DIR = new File(ROOT +
-    // "/test/java");
-    // public static final File FORGE_SRC_RESOURCE_DIR = new File(ROOT +
-    // "/test/resources");
     public static final File FORGE_SRC_JAVA_DIR = new File(Util.ROOT + "/workspace/forge/src/main/java");
     public static final File FORGE_SRC_RESOURCE_DIR = new File(Util.ROOT + "/workspace/forge/src/main/resources");
     
@@ -61,6 +57,17 @@ public class Util
     public static void writeFile(String filePath, String fileName, String fileContent, String fileExtension)
     {
         writeFile(new File(filePath, fileName + "." + fileExtension), "");
+    }
+    
+    public static void initDirectory()
+    {
+        checkDir(Util.ROOT);
+        checkDir(Util.CONFIG);
+        checkDir(Util.PROJECT);
+        checkDir(Util.LOG_DIR);
+        checkDir(Util.FORGE_DIR);
+        checkDir(Util.FORGE_SRC_JAVA_DIR);
+        checkDir(Util.FORGE_SRC_RESOURCE_DIR);
     }
     
     public static void checkDir(File file)
