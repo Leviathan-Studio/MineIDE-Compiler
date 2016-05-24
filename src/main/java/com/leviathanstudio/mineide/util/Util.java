@@ -1,4 +1,4 @@
-package com.leviathanstudio.mineide.utils;
+package com.leviathanstudio.mineide.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
-public class Utils
+public class Util
 {
     public static final String IMG_DIR = "/mineIDE/img/";
     public static final String CSS_DIR = "/mineIDE/css/";
@@ -16,16 +16,16 @@ public class Utils
     public static final String TEMPLATE_DIR = "/minecraft/template/";
     
     public static final File ROOT = EnumOS.getWorkingDirectory();
-    public static final File CONFIG = new File(Utils.ROOT, "config");
-    public static final File PROJECT = new File(Utils.ROOT, "project");
-    public static final File LOG = new File(Utils.ROOT, "log");
-    public static final File FORGE_DIR = new File(Utils.ROOT + "/workspace/forge");
+    public static final File CONFIG = new File(Util.ROOT, "config");
+    public static final File PROJECT = new File(Util.ROOT, "project");
+    public static final File LOG = new File(Util.ROOT, "log");
+    public static final File FORGE_DIR = new File(Util.ROOT + "/workspace/forge");
     // public static final File FORGE_SRC_JAVA_DIR = new File(ROOT +
     // "/test/java");
     // public static final File FORGE_SRC_RESOURCE_DIR = new File(ROOT +
     // "/test/resources");
-    public static final File FORGE_SRC_JAVA_DIR = new File(Utils.ROOT + "/workspace/forge/src/main/java");
-    public static final File FORGE_SRC_RESOURCE_DIR = new File(Utils.ROOT + "/workspace/forge/src/main/resources");
+    public static final File FORGE_SRC_JAVA_DIR = new File(Util.ROOT + "/workspace/forge/src/main/java");
+    public static final File FORGE_SRC_RESOURCE_DIR = new File(Util.ROOT + "/workspace/forge/src/main/resources");
     
     public static void writeFile(File file, String fileContent)
     {

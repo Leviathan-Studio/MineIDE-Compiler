@@ -1,4 +1,4 @@
-package com.leviathanstudio.mineide.utils;
+package com.leviathanstudio.mineide.util;
 
 import java.io.File;
 
